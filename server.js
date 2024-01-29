@@ -20,7 +20,6 @@ app.use(express.json());
 
 app.get('/login', (req, res) => {
     const redirect_uri = 'http://localhost:3001/callback';
-
     const scope = 'user-read-private user-read-email user-top-read playlist-modify-public';
 
     const spotifyAuthUrl = 'https://accounts.spotify.com/authorize?' +
