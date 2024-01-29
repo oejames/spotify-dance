@@ -13,9 +13,6 @@ function App() {
       });
   };
 
-  //im thinking probably just implement a constHandleCallback which would be the screen 
-  //that you're automatically taken to after login, and have it actually show
-  //the playlist like with the spotify frame thingy
   return (
     <div className="App">
       <header className="App-header">

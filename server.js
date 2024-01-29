@@ -35,6 +35,7 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/callback', async (req, res) => {
+    
     // Handle Spotify callback, exchange code for access token
     const code = req.query.code || null;
     const redirect_uri = 'http://localhost:3001/callback';
@@ -60,9 +61,7 @@ app.get('/callback', async (req, res) => {
 
         // Handle the response and create a playlist
         const access_token = response.data.access_token;
-
         console.log('Access token received:', access_token);
-
         spotifyApi.setAccessToken(access_token);
 
         // Call Spotify API to get the user's top tracks
@@ -73,18 +72,11 @@ app.get('/callback', async (req, res) => {
         });
         console.log('Top Tracks Response:', topTracksResponse.data);
 
-        console.log('moving on to trackids= ')
-
         const trackIds = topTracksResponse.data.items.map(track => track.id);
 
-        console.log('finished trackids =')
 
-        console.log('moving on to audiofeaturesresponse but first...')
-
-        // console.log('spotifyapi.getaudiofeaturesfortracks is: ', spotifyApi.getAudioFeaturesForTrack(trackIds));
 
         const audioFeaturesResponse = await spotifyApi.getAudioFeaturesForTracks(trackIds);
-
         console.log('finished audiofeaturesresponse')
         console.log('Audio Features Response:', audioFeaturesResponse);
 
@@ -92,7 +84,6 @@ app.get('/callback', async (req, res) => {
         if (audioFeaturesResponse && audioFeaturesResponse.body && audioFeaturesResponse.body.audio_features) {
             const audioFeatures = audioFeaturesResponse.body.audio_features;
             console.log('Top Tracks Audio Features:', audioFeatures);
-            // Continue processing audio features as needed
         } else {
             console.error('Error: Invalid or missing audio features in the response.');
             console.error('Full response:', audioFeaturesResponse);
@@ -102,8 +93,6 @@ app.get('/callback', async (req, res) => {
         // Extract danceability values from top tracks
         const danceabilityValues = audioFeaturesResponse.body.audio_features.map(feature => feature.danceability);
 
-            // .flatMap(track => track.audio_features ? track.audio_features.map(feature => feature.danceability) : []);
-        
         console.log('Audio Features:', danceabilityValues);
         console.log('Danceability values:', danceabilityValues);
 
@@ -125,15 +114,9 @@ app.get('/callback', async (req, res) => {
             );
 
             // Define a threshold for danceability
-            const danceabilityThreshold = 0.8; // Adjust the threshold as needed
-
-            // Filter tracks based on danceability threshold
+            const danceabilityThreshold = 0.8; 
             const highDanceabilityTracks = audioFeaturesResponse.body.audio_features.filter(feature => feature.danceability > danceabilityThreshold);
-
-            // Extract track IDs from the filtered tracks
             const trackIds = highDanceabilityTracks.map(feature => feature.id);
-
-            // Create an array of Spotify URIs using the track IDs
             const trackUris = trackIds.map(trackId => `spotify:track:${trackId}`);
 
             console.log("trackUris: ", trackUris)
