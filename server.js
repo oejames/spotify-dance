@@ -65,7 +65,7 @@ app.get('/callback', async (req, res) => {
         spotifyApi.setAccessToken(access_token);
 
         // Call Spotify API to get the user's top tracks
-        const topTracksResponse = await axios.get('https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=100', {
+        const topTracksResponse = await axios.get('https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50', {
             headers: {
                 'Authorization': 'Bearer ' + access_token,
             },
